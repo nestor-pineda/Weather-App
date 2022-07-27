@@ -62,7 +62,7 @@ const updateCity = async (city) => {
   return { cityDetails, weather };
 };
 
-//2. Submit Event Listener
+//2. Capture the Submit Event Listener
 cityForm.addEventListener("submit", (e) => {
   e.preventDefault(); // Prevent default refresh action
 
