@@ -1,12 +1,11 @@
-// DOM manipulation
+// 1. DOM manipulation variables
 const cityForm = document.querySelector("form");
-
 const card = document.querySelector(".card");
 const details = document.querySelector(".details");
-
 const time = document.querySelector("img.time");
 const icon = document.querySelector(".icon img");
 
+//6. function that passes the info to the browser
 const updateUI = (data) => {
   // const cityDetails = data.cityDetails;
   // const weather = data.weather;
@@ -24,7 +23,7 @@ const updateUI = (data) => {
 </div>
 `;
 
-  //Update night/day image & icon
+  // Update night/day image & icon
   // Ternary operator !
   const timeSrc = weather.IsDayTime ? "img/day.svg" : "img/night.svg";
   time.setAttribute("src", timeSrc);
@@ -47,8 +46,9 @@ const updateUI = (data) => {
   }
 };
 
+// 4. Updates the demanded city information when typed.
 const updateCity = async (city) => {
-  console.log(city);
+  //We create two objects witht the fetched information.
   const cityDetails = await getCity(city);
   const weather = await getWeather(cityDetails.Key);
 
@@ -56,10 +56,13 @@ const updateCity = async (city) => {
   //   cityDetails: cityDetails,
   //   weather: weather,
   // };
-  // Object shorthand notation
+
+  // Object shorthand notation !
+  // the information of the typed city is here
   return { cityDetails, weather };
 };
 
+//2. Submit Event Listener
 cityForm.addEventListener("submit", (e) => {
   e.preventDefault(); // Prevent default refresh action
 
@@ -67,8 +70,9 @@ cityForm.addEventListener("submit", (e) => {
   const city = cityForm.city.value.trim();
   cityForm.reset(); // Cleans th input feald
 
-  // update the info in the browser
+  //3. invokes the function that updates the city information when typed by passing the name of the city.
   updateCity(city)
+    //5. updateCity is asynchronous so it returns a promise. When thw city info is ready, we invoke que updateUI function that shows the info in the browser.
     .then((data) => updateUI(data))
     .catch((err) => console.log(err.message));
 });
