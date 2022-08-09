@@ -1,32 +1,33 @@
-// API logic
-const key = "TX1lL9OU0n2XBVWL9zBbXKhw3PHTFobX";
+// We are ancapsulating in a Class everythong that has to do with the forcast API call.
 
-// Get weather information
-const getWeather = async (id) => {
-  const baseUrl = "http://dataservice.accuweather.com/currentconditions/v1/";
-  const query = `${id}?apikey=${key}`;
+class Forecast {
+  constructor() {
+    this.key = "TX1lL9OU0n2XBVWL9zBbXKhw3PHTFobX";
+    this.weatherUrl = "http://dataservice.accuweather.com/currentconditions/v1/";
+    this.cityUrl = "http://dataservice.accuweather.com/locations/v1/cities/search";
+  }
 
-  const response = await fetch(baseUrl + query);
-  const data = await response.json();
+  // Get city information
+  async getCity(city) {
+    const query = `?apikey=${this.key}&q=${city}`;
+    const response = await fetch(this.cityUrl + query);
+    const data = await response.json();
+    return data[0]; //We are only interested in the first object of the data array
+  }
 
-  return data[0];
-};
+  // Get weather information
+  async getWeather(id) {
+    const query = `${id}?apikey=${this.key}`;
+    const response = await fetch(this.weatherUrl + query);
+    const data = await response.json();
+    return data[0];
+  }
 
-// Get city information
-const getCity = async (city) => {
-  const baseUrl = "http://dataservice.accuweather.com/locations/v1/cities/search";
-  const query = `?apikey=${key}&q=${city}`;
-  const response = await fetch(baseUrl + query);
-  const data = await response.json();
-
-  return data[0]; //We are only interested in the first object of the data array
-};
-
-// getCity("madrid")
-//   .then((data) => {
-//     return getWeather(data.Key);
-//   })
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((err) => console.log(err.message));
+  // Updates the demanded city information when typed.
+  async updateCity(city) {
+    //We create two objects witht the fetched information.
+    const cityDetails = await this.getCity(city);
+    const weather = await this.getWeather(cityDetails.Key);
+    return { cityDetails, weather };
+  }
+}
